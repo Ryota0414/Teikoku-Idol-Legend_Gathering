@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="row">
+    <div class='mx-auto col-11 col-sm-10 col-lg-7 col-xl-7'>
+      <h1><strong>帝国アイドルレジェンドの集い</strong>へようこそ!!</h1>
+      <p><strong>帝国アイドルレジェンドの集い</strong>では、</p>
+      <p>帝国アイドルレジェンドの有益な情報を共有する場です。</p>
+      <p> あなたも是非皆さんに情報提供してみましょう！</p>
+      <div class="btn-wrapper col-10 mx-auto">
+        <div class="row">
+            <%= link_to "新規登録", new_user_registration_path, class: "btn btn-success btn-sm btn-block sign_up" %>
+        </div>
+        
+        <div class="row">
+            <%= link_to "ログイン", new_user_session_path, class: "btn btn-info btn-sm btn-block mb-3 sign_in" %>
+        </div>
+        
+        <div class="row">
+            <%= link_to "ゲストログイン（閲覧用）", users_guest_sign_in_path, method: :post, class: "btn btn-info btn-sm btn-block mb-3 sign_in" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
