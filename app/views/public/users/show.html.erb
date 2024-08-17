@@ -11,5 +11,6 @@
 <div>
   <p>タイトル : <%= link_to post.title,post %></p>
   <p>ユーザーネーム：<%= post.user.name %></p>
+  <p><%= link_to "#{post.post_comments.count} コメント", post_path(post.id) %></p>
 </div>
 <% end %>
