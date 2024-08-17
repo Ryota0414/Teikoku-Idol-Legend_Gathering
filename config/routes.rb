@@ -1,11 +1,4 @@
 Rails.application.routes.draw do
-  
-  namespace :public do
-    get 'comments/new'
-    get 'comments/index'
-    get 'comments/show'
-    get 'comments/edit'
-  end
 # 顧客用
 # URL /customers/sign_in ...
   devise_for :users,skip: [:passwords], controllers: {
@@ -16,7 +9,9 @@ scope module: :public do
   root :to =>"homes#top"
   get 'homes/about'
   resources :users, only:[:show, :edit, :update, :destroy]
-  resources :posts, only:[:new, :create, :index, :show, :edit, :update, :destroy]
+  resources :posts, only:[:new, :create, :index, :show, :edit, :update, :destroy] do
+    resources :post_comments, only:[:create, :edit, :update, :destroy]
+  end
 end
   devise_scope :user do
   get '/users/sign_out', to: 'public/sessions#destroy'
