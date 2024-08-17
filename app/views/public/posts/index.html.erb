@@ -2,5 +2,6 @@
 <% @posts.each do |post| %>
   <p>タイトル : <%= link_to post.title, post %></p>
   <p>ユーザーネーム：<%= link_to post.user.name, user_path(post.user) %></p>
+  <p><%= link_to "#{post.post_comments.count} コメント", post_path(post.id) %></p>
 <% end %>
 
