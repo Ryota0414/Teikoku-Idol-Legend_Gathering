@@ -10,7 +10,7 @@ scope module: :public do
   get 'homes/about'
   resources :users, only:[:show, :edit, :update, :destroy]
   resources :posts, only:[:new, :create, :index, :show, :edit, :update, :destroy] do
-    resources :post_comments, only:[:create, :edit, :update, :destroy]
+    resources :post_comments, only:[:create, :edit, :update, :destroy] 
   end
 end
   devise_scope :user do

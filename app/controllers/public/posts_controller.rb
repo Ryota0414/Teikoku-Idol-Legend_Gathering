@@ -10,7 +10,7 @@ class Public::PostsController < ApplicationController
 
   def show
     @post = Post.find(params[:id])
-    @user = User.find(@post.user_id)
+    @user = User.find(params[:id])
     @post_comment = PostComment.new
   end
 
@@ -44,6 +44,11 @@ class Public::PostsController < ApplicationController
   end
   
 private
+
+  def user_params
+    params.require(:user).permit(:name, :email, :profile_image)
+  end
+  
   def post_params
     params.require(:post).permit(:title, :body)
   end
