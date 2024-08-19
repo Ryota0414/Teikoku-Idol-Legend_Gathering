@@ -7,6 +7,8 @@ class Public::PostCommentsController < ApplicationController
     redirect_to post_path(post)
   end
   
+  
+  
   def edit
   end
   

@@ -11,6 +11,7 @@
   </head>
 
   <body>
+    <%= image_tag current_user.get_profile_image(50,50) %><%= current_user.name %>
     <%= render 'layouts/header' %>
       <main>
         <%= yield %>
