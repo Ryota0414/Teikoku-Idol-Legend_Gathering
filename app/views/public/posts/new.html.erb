@@ -1,24 +1,41 @@
 <h1>新規投稿</h1>
-<% if @post.errors.any? %>
-  <%= @post.errors.count %>件のエラーが発生しました
-  <ul>
-    <% @post.errors.full_messages.each do |message| %>
-      <li><%= message %></li>
+
+<% if user_signed_in? && !current_user.guest_user? %>
+  <% if @post.errors.any? %>
+    <%= @post.errors.count %>件のエラーが発生しました
+    <ul>
+      <% @post.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <%= form_with model: @post, local: true, multipart: true do |form| %>
+
+  <p><%= form.label :title %><br>
+  <%= form.text_field :title %>
+  </p>
+
+  <p><%= form.label :body %><br>
+  <%= form.text_area :body %>
+  </p>
+
+  <p>
+    <%= form.collection_check_boxes :genre_ids, Genre.all, :id, :name, checked: nil, include_hidden: false do |b| %>
+      <div>
+        <%= b.check_box %>
+        <%= b.text %>
+      </div>
     <% end %>
-  </ul>
+  </p>
+
+  <p><%= form.label :image, "Upload Image" %><br>
+  <%= form.file_field :image %>
+  </p>
+
+  <p><%= form.submit %></p>
+
 <% end %>
-
-<%= form_with model: @post, local: true do |form| %>
-
-<p><%= form.label :title %><br>
-<%= form.text_field :title %>
-</p>
-
-<p><%= form.label :body %><br>
-<%= form.text_area :body %>
-</p>
-
-<p><%= form.submit %> 
-</p>
-
+<% else %>
+  <p>新規投稿を行うには、<%= link_to '会員登録', destroy_user_session_path, method: :delete %>が必要です。</p>
 <% end %>
