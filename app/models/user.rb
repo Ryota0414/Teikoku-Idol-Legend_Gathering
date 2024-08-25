@@ -10,6 +10,13 @@ class User < ApplicationRecord
   validates :name, presence: true
   
   has_one_attached :profile_image
+  def user_status
+    if is_deleted == true
+      "退会"
+    else
+      "有効"
+    end
+  end
   
   def active_for_authentication?
     super && (is_deleted == false)
