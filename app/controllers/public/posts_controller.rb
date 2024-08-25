@@ -5,18 +5,28 @@ class Public::PostsController < ApplicationController
   end
 
   def index
-    @posts = Post.all
+    active_user_ids = User.where(is_deleted: false).ids
+    @posts = Post.where(user_id: active_user_ids)
   end
 
   def show
     @post = Post.find(params[:id])
-    @user = User.find(params[:id])
+    @user = @post.user
     @post_comment = PostComment.new
   end
 
   def edit
     @post = Post.find(params[:id])
   end
+  
+  #def tag_filter
+    ##　中間テーブルから特定のジャンルのレコードをとってくる
+    #post_genre = PostGenre.where(genre_id: params[:genre_id])
+    ## とってきたレコードからぽすとIDを取得
+    #post_ids = post_genre.map(&:post_id)
+    ## ポストIDからポストレコードを取得
+    #@posts = Post.where(id: post_ids)
+  #end
   
   def create
     @post = Post.new(post_params)
@@ -50,7 +60,7 @@ private
   end
   
   def post_params
-    params.require(:post).permit(:title, :body)
+    params.require(:post).permit(:title, :body, :image, genre_ids: [])
   end
 
   def is_matching_login_user

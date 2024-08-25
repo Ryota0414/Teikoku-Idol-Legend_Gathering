@@ -1,0 +1,20 @@
+<h1>Genres</h1>
+
+<%= link_to 'New Genre', new_admin_genre_path %>
+
+<ul>
+  <% @genres.each do |genre| %>
+    <li>
+      <p>
+        <% if genre.genre_image.attached? %>
+          <%= image_tag genre.display_image %>
+        <% else %>
+          No Image Available
+        <% end %>
+      </p>
+      <%= link_to genre.name, admin_genre_path(genre) %>
+      <%= link_to 'Edit', edit_admin_genre_path(genre) %> |
+      <%= link_to 'Delete', admin_genre_path(genre), method: :delete, data: { confirm: 'Are you sure?' } %>
+    </li>
+  <% end %>
+</ul>
