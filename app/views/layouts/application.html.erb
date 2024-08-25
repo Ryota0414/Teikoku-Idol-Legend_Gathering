@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TeikokuIdolLegendSns</title>
+    <title>TeikokuIdolLegendGathering</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,7 +11,10 @@
   </head>
 
   <body>
-    <%= image_tag current_user.get_profile_image(50,50) %><%= current_user.name %>
+    <h1>帝国アイドルレジェンドプロデューサーの集い</h1>
+    <% if current_user %>
+      <%= image_tag current_user.get_profile_image(50, 50) %><%= current_user.name %>
+    <% end %>
     <%= render 'layouts/header' %>
       <main>
         <%= yield %>
