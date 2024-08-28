@@ -26,6 +26,10 @@
                 <td style="width: 30%; padding-left: 20px;">プロフィール画像</td>
                 <td><%= f.file_field :profile_image, accept: "image/*" %>  </td>
               </tr>
+              <tr>
+                <td style="width: 30%; padding-left: 20px;">自己紹介文</td>
+                <td><%= f.text_area :bio, rows: 10, style: "width: 100%;" %></td>
+              </tr>
             </table>
 
             <%= f.submit "編集内容を保存", class:"btn btn-success" %>

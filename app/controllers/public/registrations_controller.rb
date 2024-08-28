@@ -10,9 +10,10 @@ class Public::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    sign_out(current_admin) if current_admin
+    super
+  end
 
   # GET /resource/edit
   # def edit

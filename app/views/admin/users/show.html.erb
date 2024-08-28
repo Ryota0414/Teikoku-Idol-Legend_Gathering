@@ -1,16 +1,46 @@
-<div>
-  <%= image_tag @user.get_profile_image(100,100) %>
-  <h3><%= @user.name %></h3>
+<div class="container">
+  <!-- プロフィールセクション -->
+  <div class="d-flex align-items-center">
+    <%= image_tag @user.get_profile_image(100, 100), class: "rounded-circle me-3" %>
+    <div>
+      <h3 id="user-name-display"><%= @user.name %></h3>
+    </div>
+  </div>
+
+  <div id="user-bio-display">
+    <% if @user.bio.present? %>
+      <p class="text-muted"><%= simple_format(@user.bio) %></p>
+    <% end %>
+  </div>
+
+  <% if @user == current_user || current_admin %>
+    <!-- ユーザー編集リンクのみ表示 -->
+    <% if @user.is_deleted? %>
+      <%= link_to "有効にする", admin_user_withdrow_path(@user.id), method: :patch, :class => "btn btn-success ms-3", data: { confirm: "本当に有効にしますか？" } %>
+    <% else %>
+      <%= link_to "退会させる", admin_user_withdrow_path(@user.id), method: :patch, :class => "btn btn-danger ms-3", data: { confirm: "本当に退会しますか？" } %>
+    <% end %>
+  <% end %>
+
+  <!-- 投稿一覧セクション -->
+  <h1 class="mb-4">投稿一覧</h1>
+  <div class="list-group">
+    <% @posts.each do |post| %>
+      <div class="list-group-item">
+        <div class="d-flex align-items-center mb-2">
+          <%= link_to user_path(post.user), class: "d-flex align-items-center text-decoration-none" do %>
+            <%= image_tag post.user.get_profile_image(50, 50), class: "rounded-circle me-3" %>
+            <strong class="text-dark"><%= post.user.name %></strong>
+          <% end %>
+        </div>
+        <h5 class="mb-1">タイトル: <%= link_to post.title, admin_post_path(post), class: "text-decoration-none" %></h5>
+        <p class="mb-0"><%= link_to "#{post.post_comments.count} コメント", post_path(post.id), class: "text-secondary" %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- ページネーション -->
+  <div class="pagination d-flex justify-content-center mt-4">
+    <%= paginate @posts %>
+  </div>
 </div>
-  <p><%= link_to "プロフィール編集", edit_admin_user_path(@user) %></p>
-
-
-<!-- ユーザーの投稿一覧 -->
-
-<% @posts.each do |post| %>
-<div>
-  <p><%= image_tag @user.get_profile_image(50,50) %><%= post.user.name %></p>
-  <p>タイトル : <%= link_to post.title,post %></p>
-  <p><%= link_to "#{post.post_comments.count} コメント", post_path(post.id) %></p>
-</div>
-<% end %>
