@@ -18,7 +18,44 @@
 ![スクリーンショット 2024-08-28 204153](https://github.com/user-attachments/assets/4910b6bc-51e3-4e71-bac3-2115bc0abef6)
 ![スクリーンショット 2024-08-28 205852](https://github.com/user-attachments/assets/0a62d8e2-44b4-42d8-a4b2-093ea0388b1a)
 ![スクリーンショット 2024-08-28 210003](https://github.com/user-attachments/assets/4e948990-f04b-4ded-ab62-d8f1ea5b9554)
-- This site was built using[アプリケーション詳細設計書](https://docs.google.com/spreadsheets/d/1s6hBdbMJwd4LYhYi8t6GZpihsVFP9Gv0v0ISx79IIj4/edit?usp=sharing)
+[アプリケーション詳細設計書](https://docs.google.com/spreadsheets/d/1s6hBdbMJwd4LYhYi8t6GZpihsVFP9Gv0v0ISx79IIj4/edit?usp=sharing)
+- 使用したgem
+- rails - ウェブアプリケーションフレームワーク
+- sqlite3 - デフォルトのデータベース
+- puma - アプリケーションサーバー
+- sass-rails - スタイルシート用のSCSSをサポート
+- webpacker - JavaScriptのトランスパイル
+- turbolinks - ページ間のナビゲーションを高速化
+- jbuilder - JSON APIの構築
+- image_processing - Active Storageで画像を処理
+- mini_magick - ImageMagickのラッパーとして画像を処理
+- bootsnap - 起動時間の短縮
+- kaminari - ページネーションのサポート
+- devise - ユーザー認証
+- dotenv-rails - 環境変数の管理
+- mysql2 - プロダクション用データベース(MySQL)接続
+- tzinfo-data - Windows環境向けのタイムゾーン情報
+- net-smtp - SMTPプロトコルのサポート
+- net-pop - POPプロトコルのサポート
+- net-imap - IMAPプロトコルのサポート
+## 実装機能
+- エンドユーザー
+  - 会員登録・退会
+  - 投稿機能・投稿削除
+  - コメント・コメント返信・コメント削除
+  - 投稿閲覧・投稿絞り込み表示
+  - ユーザー・投稿検索
+  - ゲストログイン
+ - 管理者
+   - ジャンル登録・編集・削除
+   - エンドユーザーの退会・有効
+   - エンドユーザーの投稿・コメントの削除
+<br>
+管理者機能は管理者ログインページより<br>
+メールアドレス：teikoku@gmail.com<br>
+パスワード：teikoku0414<br>
+を入力してログインしてください。
+
 ## 開発環境
 - OS：Linux(CentOS)
 - 言語：HTML,CSS,JavaScript,Ruby,SQL
