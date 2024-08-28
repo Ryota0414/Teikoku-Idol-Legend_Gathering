@@ -7,17 +7,82 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.css">
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <script src="https://kit.fontawesome.com/1b378e5738.js" crossorigin="anonymous"></script>
+    
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ヘッダーを固定化し、半透明にする */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000; /* ヘッダーが他のコンテンツの上に表示されるようにする */
+        background-color: rgba(255, 165, 0, 0.8); /* 背景色をオレンジ色で半透明にする */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ヘッダーに影を追加 (オプション) */
+      }
+
+      /* ヘッダーの高さに合わせて下にスペースを追加 */
+      .main-content {
+        flex: 1;
+        margin-top: 135px; /* ヘッダーの高さに合わせて調整 */
+        padding-bottom: 50px; /* フッターの高さに合わせて調整 */
+      }
+
+      footer {
+        background-color: #f8f9fa;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        width: 100%;
+        bottom: 0;
+      }
+    </style>
   </head>
 
   <body>
-    <h1>帝国アイドルレジェンドプロデューサーの集い</h1>
-    <% if current_user %>
-      <%= image_tag current_user.get_profile_image(50, 50) %><%= current_user.name %>
-    <% end %>
-    <%= render 'layouts/header' %>
+    <header>
+      <%= render 'layouts/header' %>
+    </header>
+
+    <div class="main-content">
+      <% if current_user %>
+        <%= link_to user_path(current_user), class: "d-flex align-items-center" do %>
+          <%= image_tag current_user.get_profile_image(50, 50), class: "rounded-circle me-3", style: "width: 50px; height: 50px;" %>
+          <span><%= current_user.name %></span>
+        <% end %>
+      <% elsif current_admin %>
+        <span><%= current_admin.name %></span>
+      <% end %>
+
       <main>
         <%= yield %>
       </main>
+    </div>
+    
+    <footer>
+      <%= render 'layouts/footer' %>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Popper.js (必要ない場合もありますが、Bootstrapのコンポーネントに必要) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Slick Carousel JS -->
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
   </body>
 </html>

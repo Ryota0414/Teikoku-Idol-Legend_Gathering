@@ -1,84 +1,139 @@
 <div class="container">
-  <h2>投稿したユーザー</h2>
-  <p><%= image_tag @post.user.get_profile_image(100,100) %><%= link_to @post.user.name, user_path(@post.user) %></p>
-  <h2><%= @post.title %></h2>
-  <h2>Genres:</h2>
-  <div class="row">
-  <% @post.genres.each_slice(5) do |genres| %>
-    <div class="col-md-3">
-      <% genres.each do |genre| %>
-        <ul>
-          <li>
-            <% if genre.genre_image.attached? %>
-              <%= image_tag genre.genre_image.variant(resize_to_limit: [100, 100]) %><br>
-            <% else %>
-              <p>No Image Available</p>
-            <% end %>
-            <%= genre.name %>
-          </li>
-        </ul>
+  <div class="post-header mb-4">
+    <h2 class="mb-3">投稿したユーザー</h2>
+    <p class="d-flex align-items-center">
+      <%= link_to user_path(@post.user), class: "text-decoration-none d-flex align-items-center" do %>
+        <%= image_tag @post.user.get_profile_image(100, 100), class: "rounded-circle me-2" %>
+        <span style="font-size: 2rem;"><%= @post.user.name %></span>
+      <% end %>
+    </p>
+    <h2><%= @post.title %></h2>
+  </div>
+
+  <div class="post-genres mb-4">
+    <h2>関連するアイドル</h2>
+    <div class="row">
+      <% @post.genres.each do |genre| %>
+        <div class="col-md-2 text-center mb-3">
+          <% if genre.genre_image.attached? %>
+            <%= image_tag genre.genre_image.variant(resize_to_limit: [100, 100]), class: "img-thumbnail mb-2" %>
+          <% else %>
+            <p>No Image Available</p>
+          <% end %>
+          <h5><%= genre.name %></h5>
+        </div>
       <% end %>
     </div>
-  <% end %>
-</div>
-  <p>
-  <%= image_tag @post.image.variant(resize_to_limit: [600, 600]) if @post.image.attached? %>
-  </p>
-  <h2>本文</h2>
-  <p><%= @post.body %></p>
-  <h2>投稿日</h2>
-  <p><%= @post.created_at.strftime('%Y/%m/%d') %></p>
-  <% if @post.user == current_user %>
-    <%= link_to "編集", edit_post_path(@post.id)%>
-  <% end %>
+  </div>
+
+  <% if @post.images.attached? %>
+    <div class="post-images mb-4">
+      <h2>投稿画像</h2>
+      <div class="d-flex flex-wrap">
+        <% @post.images.each_with_index do |image, index| %>
+          <div style="flex-basis: calc(100% / 4); flex-grow: 1;">
+            <%= link_to image_tag(image.variant(resize_to_limit: [nil, 300]), class: "img-fluid"), "#imageModal#{index}", data: { toggle: "modal" } %>
+          </div>
   
-  <% if @post.user == current_user %>
-    <%= link_to "削除", post_path(@post.id), method: :delete, "data-confirm" => "本当に削除しますか？" %>
+          <!-- モーダル -->
+          <div class="modal fade" id="imageModal<%= index %>" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel<%= index %>" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="imageModalLabel<%= index %>">画像の拡大表示</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <%= image_tag image, class: "img-fluid", style: "max-width: 100%; height: auto;" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
   <% end %>
 
-  <div>
+  <div class="post-body mb-4">
+    <h2>本文</h2>
+    <p><%= simple_format(@post.body) %></p>
+  </div>
+
+  <div class="post-date mb-4">
+    <h2>投稿日</h2>
+    <p><%= @post.created_at.strftime('%Y/%m/%d') %></p>
+  </div>
+
+  <div class="post-actions mb-4">
+    <% if @post.user == current_user %>
+      <%= link_to "編集", edit_post_path(@post.id), class: "btn btn-primary me-2" %>
+      <%= link_to "削除", post_path(@post.id), method: :delete, class: "btn btn-danger", data: { confirm: "本当に削除しますか？" } %>
+    <% end %>
+  </div>
+
+  <div class="post-comments mb-4">
     <p>コメント件数：<%= @post.post_comments.where(parent_id: nil).count %></p>
     <% @post.post_comments.where(parent_id: nil).each do |post_comment| %>
-      <div style="margin-bottom: 20px;">
-        <p><%= image_tag post_comment.user.get_profile_image(50,50) %><%= post_comment.user.name %>
-        <%= post_comment.created_at.strftime('%Y/%m/%d') %></p>
-        <p><%= post_comment.comment %></p>
+      <div class="comment mb-4 p-3 border rounded">
+        <p class="d-flex align-items-center">
+          <%= link_to user_path(post_comment.user), class: "text-decoration-none d-flex align-items-center" do %>
+            <%= image_tag post_comment.user.get_profile_image(50, 50), class: "rounded-circle me-2" %>
+            <span><%= post_comment.user.name %></span>
+          <% end %>
+          <span class="ms-auto"><%= post_comment.created_at.strftime('%Y/%m/%d') %></span>
+        </p>
+        <p><%= simple_format(post_comment.comment) %></p>
         <% if post_comment.user == current_user %>
-          <%= link_to "削除", post_post_comment_path(post_comment.post, post_comment), method: :delete %>
+          <%= link_to "削除", post_post_comment_path(post_comment.post, post_comment), method: :delete, class: "btn btn-outline-danger btn-sm", data: { confirm: "本当に削除しますか？" } %>
         <% end %>
-
+  
         <!-- 返信を表示 -->
-        <div style="margin-left: 20px;">
+        <div class="replies ms-3 mt-3">
           <% post_comment.replies.each do |reply| %>
-            <p><%= image_tag reply.user.get_profile_image(30,30) %><%= reply.user.name %>
-            <%= reply.created_at.strftime('%Y/%m/%d') %></p>
-            <p><%= reply.comment %></p>
-            <% if reply.user == current_user %>
-              <%= link_to "削除", post_post_comment_path(reply.post, reply), method: :delete %>
-            <% end %>
+            <div class="reply mb-3">
+              <p class="d-flex align-items-center">
+                <%= link_to user_path(reply.user), class: "text-decoration-none d-flex align-items-center" do %>
+                  <%= image_tag reply.user.get_profile_image(30, 30), class: "rounded-circle me-2" %>
+                  <span><%= reply.user.name %></span>
+                <% end %>
+                <span class="ms-auto"><%= reply.created_at.strftime('%Y/%m/%d') %></span>
+              </p>
+              <p><%= simple_format(reply.comment) %></p>
+              <% if reply.user == current_user %>
+                <%= link_to "削除", post_post_comment_path(reply.post, reply), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+              <% end %>
+            </div>
           <% end %>
         </div>
-
+  
         <% unless current_user && current_user.guest_user? %>
           <!-- 返信フォーム -->
-          <%= form_with(model: [@post, @post.post_comments.new], local: true) do |f| %>
-            <%= f.hidden_field :parent_id, value: post_comment.id %>
-            <%= f.text_area :comment, rows: '3', placeholder: "返信をここに" %>
-            <%= f.submit "返信する" %>
+          <%= form_with(model: [@post, @post.post_comments.new], local: true, class: "mt-3") do |f| %>
+            <div class="mb-3">
+              <%= f.hidden_field :parent_id, value: post_comment.id %>
+              <%= f.text_area :comment, rows: '3', placeholder: "返信をここに", class: "form-control" %>
+            </div>
+            <%= f.submit "返信する", class: "btn btn-primary" %>
           <% end %>
         <% end %>
       </div>
     <% end %>
   </div>
 
-  <div>
+
+
+  <div class="post-comment-form mb-4">
     <% unless current_user && current_user.guest_user? %>
-      <%= form_with model: [@post, @post_comment] do |f| %>
-        <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに" %>
-        <%= f.submit "送信する" %>
+      <%= form_with model: [@post, @post_comment], class: "mt-3" do |f| %>
+        <div class="mb-3">
+          <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに", class: "form-control" %>
+        </div>
+        <%= f.submit "送信する", class: "btn btn-primary" %>
       <% end %>
     <% else %>
-      <p>コメントを行うには、<%= link_to '会員登録', destroy_user_session_path, method: :delete %>が必要です。</p>
+      <p>コメントを行うには、<%= link_to '会員登録', destroy_user_session_path, method: :delete, class: "text-decoration-none" %>が必要です。</p>
     <% end %>
   </div>
 </div>

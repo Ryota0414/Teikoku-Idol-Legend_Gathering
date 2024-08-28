@@ -1,45 +1,63 @@
-<table class="table table-hover table-inverse">
-  <!--検索対象モデルがUserの時 -->
-  <% if @range == "User" %>
-  <h2>Users search "<%= @word %>"</h2>
-    <thead>
-      <tr>
-        <th>image</th>
-        <th>name</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @users.each do |user| %>
-        <tr>
-          <td><%= image_tag user.get_profile_image(50, 50) %></td>
-          <td><%= user.name %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  <% else %>
-    <!--検索対象モデルがUserではない時(= 検索対象モデルがBookの時) -->
-    <thead>
-      <tr>
-        <th></th>
-        <th>Title</th>
-        <th>opinion</th>
-
-      </tr>
-    <tbody>
-    <h2>Posts search for "<%= @word %>"</h2>
-    <% @posts.each do |post| %>
-      <tr>
-        <td>
-          <%= link_to user_path(post.user) do %>
-            <%= image_tag post.user.get_profile_image(50, 50) %>
+<div class="container">
+  <h1 class="mb-4">
+    <% if @range == "User" %>
+      ユーザー検索: "<%= @word %>"
+    <% else %>
+      投稿検索: "<%= @word %>"
+    <% end %>
+  </h1>
+  <div class="slider" style="display: flex; align-items: center;">
+    <% @genres.each do |genre| %>
+      <div class="genre-block" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100px; width: 100px;">
+        <%= link_to posts_path(genre_id: genre.id), class: "text-decoration-none d-block" do %>
+          <% if genre.genre_image.attached? %>
+            <%= image_tag genre.genre_image.variant(gravity: :center, resize:"80x100").processed, class: "img-fluid rounded genre-image", style: "display: block; margin: 0 auto;" %>
+          <% else %>
+            <div class="placeholder" style="display: block; margin: 0 auto; width: 100px; height: 100px; background-color: #f0f0f0; border: 1px solid #ddd; text-align: center; line-height: 100px;">No Image</div>
           <% end %>
-          <%= link_to post.user.name, user_path(post.user) %>
-        </td>
-        <td><%= link_to post.title , post_path(post.id) %></td>
-        <td><%= post.body %></td>
-        </tr>
+          <p class="genre-name" style="text-align: center; margin-top: 8px;"><%= genre.name %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- 検索結果 -->
+  <div class="list-group">
+    <% if @range == "User" %>
+      <% @users.each do |user| %>
+        <div class="list-group-item d-flex align-items-center">
+          <%= link_to user_path(user), class: "text-decoration-none d-flex align-items-center" do %>
+            <%= image_tag user.get_profile_image(80, 80), class: "rounded-circle me-3" %>
+            <div>
+              <div class="d-flex align-items-center">
+                <strong class="text-dark me-3" style="font-size: 1.25rem;"><%= user.name %></strong>
+                <span class="text-muted"><%= "投稿 #{user.posts.count}" %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
       <% end %>
-    </tbody>
-  <% end %>
-</table>
+    <% else %>
+      <% @posts.each do |post| %>
+        <div class="list-group-item">
+          <div class="d-flex align-items-center mb-2">
+            <%= link_to user_path(post.user), class: "d-flex align-items-center text-decoration-none" do %>
+              <%= image_tag post.user.get_profile_image(50, 50), class: "rounded-circle me-3", style: "width: 50px; height: 50px;" %>
+              <strong class="text-dark"><%= post.user.name %></strong>
+            <% end %>
+          </div>
+          <h5 class="mb-1">タイトル: <%= link_to post.title, post_path(post.id), class: "text-decoration-none" %></h5>
+          <p class="mb-0"><%= link_to "#{post.post_comments.count} コメント", post_path(post.id), class: "text-secondary" %></p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="pagination d-flex justify-content-center mt-4">
+    <% if @range == "User" %>
+      <%= paginate @users %> <!-- ユーザーのページネーション -->
+    <% else %>
+      <%= paginate @posts %> <!-- 投稿のページネーション -->
+    <% end %>
+  </div>
+</div>

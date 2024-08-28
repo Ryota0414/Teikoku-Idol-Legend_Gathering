@@ -1,41 +1,123 @@
-<h1>新規投稿</h1>
+<div class="container">
+  <h1>新規投稿</h1>
 
-<% if user_signed_in? && !current_user.guest_user? %>
-  <% if @post.errors.any? %>
-    <%= @post.errors.count %>件のエラーが発生しました
-    <ul>
-      <% @post.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  <% end %>
-
-  <%= form_with model: @post, local: true, multipart: true do |form| %>
-
-  <p><%= form.label :title %><br>
-  <%= form.text_field :title %>
-  </p>
-
-  <p><%= form.label :body %><br>
-  <%= form.text_area :body %>
-  </p>
-
-  <p>
-    <%= form.collection_check_boxes :genre_ids, Genre.all, :id, :name, checked: nil, include_hidden: false do |b| %>
-      <div>
-        <%= b.check_box %>
-        <%= b.text %>
+  <% if user_signed_in? && !current_user.guest_user? %>
+    <% if @post.errors.any? %>
+      <div class="alert alert-danger">
+        <strong><%= @post.errors.count %>件のエラーが発生しました:</strong>
+        <ul>
+          <% @post.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
       </div>
     <% end %>
-  </p>
 
-  <p><%= form.label :image, "Upload Image" %><br>
-  <%= form.file_field :image %>
-  </p>
+    <%= form_with model: @post, local: true, multipart: true, id: 'post_form', class: 'needs-validation', novalidate: true do |form| %>
 
-  <p><%= form.submit %></p>
+      <div id="image_fields">
+        <p>
+          <%= form.file_field :images, name: 'post[images][]', accept: 'image/*', class: 'image-input' %>
+        </p>
+      </div>
 
-<% end %>
-<% else %>
-  <p>新規投稿を行うには、<%= link_to '会員登録', destroy_user_session_path, method: :delete %>が必要です。</p>
-<% end %>
+      <div class="mb-3">
+        <%= form.label :title, 'タイトル', class: 'form-label' %>
+        <%= form.text_field :title, class: 'form-control', required: true, style: "max-width: 400px;" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :genre_ids, 'ジャンル', class: 'form-label' %>
+        <div class="row">
+          <% Genre.all.each_slice(6) do |genres| %>
+            <% genres.each do |genre| %>
+              <div class="col-md-2 text-center">
+                <div class="form-check genre-check">
+                  <%= form.check_box :genre_ids, { multiple: true, class: 'form-check-input', id: "genre_#{genre.id}" }, genre.id, nil %>
+                  <label for="genre_<%= genre.id %>" class="form-check-label genre-label">
+                    <% if genre.genre_image.attached? %>
+                      <%= image_tag genre.genre_image.variant(resize_to_limit: [100, 100]), class: "img-thumbnail genre-image" %>
+                    <% else %>
+                      <p>No Image Available</p>
+                    <% end %>
+                    <span class="genre-name"><%= genre.name %></span>
+                  </label>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- 本文入力フィールドを大きくする -->
+      <div class="mb-3">
+        <%= form.label :body, '本文', class: 'form-label' %>
+        <%= form.text_area :body, class: 'form-control', rows: 10, style: 'height: 400px;', required: true %>
+      </div>
+
+      <div class="d-grid">
+        <%= form.submit '投稿する', class: 'btn btn-primary' %>
+      </div>
+
+    <% end %>
+  <% else %>
+    <div class="alert alert-warning">
+      新規投稿を行うには、<%= link_to '会員登録', new_user_registration_path %>が必要です。
+    </div>
+  <% end %>
+</div>
+
+<style>
+.genre-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -10px; /* 行の外側の余白を減らして全体の幅を調整 */
+}
+
+.col-md-2 {
+  padding: 10px; /* 各列の内側の余白を設定 */
+  box-sizing: border-box; /* パディングを含めたボックスサイズ調整 */
+}
+
+/* チェックボックスの領域を広げてクリックしやすくする */
+.genre-check {
+  position: relative;
+}
+
+.genre-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  padding: 10px;
+  border: 2px solid transparent; /* 枠線の初期状態 */
+  border-radius: 8px; /* 角を丸くする */
+  box-sizing: border-box; /* パディングを含めたボックスサイズ調整 */
+  transition: border-color 0.3s; /* 枠線の色が変わる際のアニメーション */
+}
+
+.genre-image {
+  max-width: 100px; /* 画像サイズの調整 */
+  height: auto;
+}
+
+.form-check-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.genre-name {
+  margin-top: 5px; /* 画像と名前の間に余白を追加 */
+}
+
+/* チェックボックスが選択されたときのスタイル */
+.form-check-input:checked + .genre-label {
+  border-color: orange; /* 選択時の枠線の色をオレンジにする */
+}
+
+
+</style>
