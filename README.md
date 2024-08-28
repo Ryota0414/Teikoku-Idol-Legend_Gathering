@@ -15,6 +15,9 @@
 - 攻略したい内容を絞り込んで攻略情報を調べる時
 - 自分の持っている攻略情報を投稿する時
 ## 設計書
+![スクリーンショット 2024-08-28 204153](https://github.com/user-attachments/assets/4910b6bc-51e3-4e71-bac3-2115bc0abef6)
+![スクリーンショット 2024-08-28 205852](https://github.com/user-attachments/assets/0a62d8e2-44b4-42d8-a4b2-093ea0388b1a)
+![スクリーンショット 2024-08-28 210003](https://github.com/user-attachments/assets/4e948990-f04b-4ded-ab62-d8f1ea5b9554)
 - This site was built using[アプリケーション詳細設計書](https://docs.google.com/spreadsheets/d/1s6hBdbMJwd4LYhYi8t6GZpihsVFP9Gv0v0ISx79IIj4/edit?usp=sharing)
 ## 開発環境
 - OS：Linux(CentOS)
