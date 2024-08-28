@@ -1,33 +1,112 @@
 <div class="container">
-  <div class="row">
-    <div class="col">
-      <h4>投稿編集</h4>
-      <div class="row">
-        <div class="col-md">
-          <% if @post.errors.any? %>
-            <%= @post.errors.count %>件のエラーが発生しました
-            <ul>
-              <% @post.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-            </ul>
-          <% end %>
-          <%= form_with model: @post do |f| %>
-            <table class="table">
-              <tr>
-                <td style="width: 30%; padding-left: 20px;">タイトル</td>
-                <td><%= f.text_field :title %></td>
-              </tr>
-              <tr>
-                <td style="width: 30%; padding-left: 20px;">本文</td>
-                <td><%= f.text_field :body %></td>
-              </tr>
-            </table>
+  <h4>投稿編集</h4>
 
-            <%= f.submit "編集内容を保存", class:"btn btn-success" %>
+  <% if @post.errors.any? %>
+    <div class="alert alert-danger">
+      <strong><%= @post.errors.count %>件のエラーが発生しました:</strong>
+      <ul>
+        <% @post.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @post, local: true, multipart: true, id: 'post_form', class: 'needs-validation', novalidate: true do |form| %>
+
+    <div id="image_fields">
+      <p>
+        <%= form.file_field :images, name: 'post[images][]', accept: 'image/*', class: 'image-input' %>
+      </p>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :title, 'タイトル', class: 'form-label' %>
+      <%= form.text_field :title, class: 'form-control', required: true, style: "max-width: 400px;" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :genre_ids, 'ジャンル', class: 'form-label' %>
+      <div class="row genre-row">
+        <% Genre.all.each_slice(6) do |genres| %>
+          <% genres.each do |genre| %>
+            <div class="col-md-2 text-center">
+              <div class="form-check genre-check">
+                <%= form.check_box :genre_ids, { multiple: true, class: 'form-check-input', id: "genre_#{genre.id}" }, genre.id, nil %>
+                <label for="genre_<%= genre.id %>" class="form-check-label genre-label">
+                  <% if genre.genre_image.attached? %>
+                    <%= image_tag genre.genre_image.variant(resize_to_limit: [100, 100]), class: "img-thumbnail genre-image" %>
+                  <% else %>
+                    <p>No Image Available</p>
+                  <% end %>
+                  <span class="genre-name"><%= genre.name %></span>
+                </label>
+              </div>
+            </div>
           <% end %>
-        </div>
+        <% end %>
       </div>
     </div>
-  </div>
+
+    <div class="mb-3">
+      <%= form.label :body, '本文', class: 'form-label' %>
+      <%= form.text_area :body, class: 'form-control', rows: 10, style: 'height: 400px;', required: true %>
+    </div>
+
+    <div class="d-grid">
+      <%= form.submit '編集内容を保存', class: 'btn btn-primary' %>
+    </div>
+
+  <% end %>
 </div>
+
+<style>
+.genre-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -10px;
+}
+
+.col-md-2 {
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.genre-check {
+  position: relative;
+}
+
+.genre-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.genre-image {
+  max-width: 100px;
+  height: auto;
+}
+
+.form-check-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.genre-name {
+  margin-top: 5px;
+}
+
+.form-check-input:checked + .genre-label {
+  border-color: orange;
+}
+</style>
