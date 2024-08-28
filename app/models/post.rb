@@ -4,7 +4,7 @@ class Post < ApplicationRecord
     has_many :post_comments, dependent: :destroy
     has_many :post_genres
     has_many :genres, through: :post_genres
-    has_one_attached :image
+    has_many_attached :images
     validates :title, presence: true
     validates :body, presence: true
     def self.looks(search, word)
@@ -19,5 +19,13 @@ class Post < ApplicationRecord
         else
           @post = Post.all
         end
+    end
+    
+    private
+
+    def image_count_within_limit
+      if images.size > 4
+        errors.add(:images, "は4枚までアップロードできます")
+      end
     end
 end

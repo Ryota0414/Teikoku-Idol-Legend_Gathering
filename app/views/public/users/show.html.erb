@@ -1,17 +1,132 @@
-<div>
-  <%= image_tag @user.get_profile_image(100,100) %>
-  <h3><%= @user.name %></h3>
-</div>
-<% if @user == current_user %>
-  <p><%= link_to "プロフィール編集", edit_user_path(@user) %></p>
-<% end %>
+<div class="container">
+  <!-- プロフィールセクション -->
+  <div class="d-flex align-items-center">
+    <%= image_tag @user.get_profile_image(100, 100), class: "rounded-circle me-3", style: "width: 60px; height: 60px;" %>
+    <div>
+      <h3 id="user-name-display"><%= @user.name %></h3>
+    </div>
+  </div>
 
-<!-- ユーザーの投稿一覧 -->
+  <div id="user-bio-display">
+    <% if @user.bio.present? %>
+      <p class="text-muted"><%= simple_format(@user.bio) %></p>
+    <% end %>
+  </div>
 
-<% @posts.each do |post| %>
-<div>
-  <p><%= image_tag @user.get_profile_image(50,50) %><%= post.user.name %></p>
-  <p>タイトル : <%= link_to post.title,post %></p>
-  <p><%= link_to "#{post.post_comments.count} コメント", post_path(post.id) %></p>
+  <% if current_user && current_user.guest_user? %>
+    <div class="alert alert-warning">
+      マイページを編集するには、<%= link_to '会員登録', destroy_user_session_path, method: :delete, class: "text-decoration-none" %>が必要です。
+    </div>
+  <% elsif @user == current_user %>
+    <!-- プロフィール編集ボタンとユーザー編集リンクを横並びにする -->
+    <div class="d-flex align-items-center">
+      <p class="mb-0">
+        <button type="button" class="btn btn-primary me-2" data-toggle="modal" data-target="#editProfileModal">プロフィール編集</button>
+      </p>
+      <p class="mb-0">
+        <%= link_to edit_user_path(@user), class: "btn btn-secondary" do %>
+          <i class="fa-solid fa-gear"></i>
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+
+
+  <!-- プロフィール編集モーダル -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProfileModalLabel">プロフィール編集</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_with model: @user, url: user_path(@user), method: :patch, remote: true, id: "edit-user-form" do |f| %>
+          <div class="form-group">
+            <%= f.label :profile_image, "プロフィール画像" %>
+            <%= f.file_field :profile_image, class: "form-control mb-2", accept: "image/*" %>
+          </div>
+          <div class="form-group">
+            <%= f.label :name, "名前" %>
+            <%= f.text_field :name, class: "form-control mb-2", placeholder: "名前を入力" %>
+          </div>
+          <div class="form-group">
+            <%= f.label :bio, "自己紹介文" %>
+            <%= f.text_area :bio, class: "form-control mb-2", rows: 3, maxlength: 160, id: "bio-textarea", placeholder: "自己紹介文を入力" %>
+            <p id="bio-char-count" class="text-right">0/160文字</p>
+          </div>
+
+          <%= f.submit "保存", class: "btn btn-primary" %>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
-<% end %>
+
+<style>
+/* モーダルの背景と枠線をTwitter風に調整 */
+.modal-content {
+  border-radius: 15px;
+  border: 1px solid #e1e8ed;
+}
+
+/* フォームコントロールのスタイリング */
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #e1e8ed;
+  padding: 10px;
+  box-shadow: none;
+}
+
+/* ボタンのスタイリング */
+.btn-primary {
+  background-color: #1da1f2;
+  border-color: #1da1f2;
+}
+
+.btn-secondary {
+  background-color: #e1e8ed;
+  border-color: #e1e8ed;
+}
+
+/* 文字数カウントのスタイリング */
+#bio-char-count {
+  font-size: 0.875rem;
+  color: #657786;
+}
+/* プロフィール画像のトリミングとアイコン風のスタイル */
+.rounded-circle {
+  width: 60px;
+  height: 60px;
+  object-fit: cover; /* 画像をコンテナに合わせてトリミング */
+  border-radius: 50%; /* 完全な円形にする */
+  border: 2px solid #e1e8ed; /* 周囲に枠線を追加 */
+}
+
+</style>
+
+  <!-- 投稿一覧セクション -->
+  <h1 class="mb-4">投稿一覧</h1>
+  <div class="list-group">
+    <% @posts.each do |post| %>
+      <div class="list-group-item">
+        <div class="d-flex align-items-center mb-2">
+          <%= link_to user_path(post.user), class: "d-flex align-items-center text-decoration-none" do %>
+            <%= image_tag post.user.get_profile_image(50, 50), class: "rounded-circle me-3", style: "width: 60px; height: 60px;" %>
+            <strong class="text-dark"><%= post.user.name %></strong>
+          <% end %>
+        </div>
+        <h5 class="mb-1">タイトル: <%= link_to post.title, post, class: "text-decoration-none" %></h5>
+        <p class="mb-0"><%= link_to "#{post.post_comments.count} コメント", post_path(post.id), class: "text-secondary" %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- ページネーション -->
+  <div class="pagination d-flex justify-content-center mt-4">
+    <%= paginate @posts %>
+  </div>
+</div>

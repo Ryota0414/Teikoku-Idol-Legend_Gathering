@@ -1,9 +1,79 @@
-<h1><%= @genre.name %></h1>
-
-<p>
-  <strong>Description:</strong>
-  <%= @genre.body %>
-</p>
-
-<%= link_to 'Edit', edit_admin_genre_path(@genre) %> |
-<%= link_to 'Back', admin_genres_path %>
+<div class="container" style="margin-top: 50px;">
+  <div class="row">
+    <div class="col">
+      <div class="d-flex align-items-center">
+        <% if @genre.genre_image.attached? %>
+          <%= image_tag @genre.genre_image.variant(resize_to_limit: [100, 100]), class: 'img-thumbnail me-3' %>
+        <% else %>
+          <%= image_tag 'default_image.jpg', class: 'img-thumbnail me-3' %>  <!-- デフォルト画像 -->
+        <% end %>
+        <h1><%= @genre.name %></h1>
+      </div>
+      <br>
+      <p>
+        <strong>アイドルの説明</strong>
+        <%= simple_format(@genre.body) %>
+      </p>
+      <table class="table">
+        <thead>
+          <p class="text-center">ステータスとレッスンボーナスの初期値</p>
+          <tr>
+            <th></th>
+            <th>HP</th>
+            <th>Vo</th>
+            <th>Da</th>
+            <th>Vi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ステータス</td>
+            <td><%= @genre.HP %></td>
+            <td><%= @genre.Vo %></td>
+            <td><%= @genre.Da %></td>
+            <td><%= @genre.Vi %></td>
+          </tr>
+          <tr>
+            <td>レッスンボーナス</td>
+            <td>ー</td>
+            <td><%= @genre.Vo_percent %>%</td>
+            <td><%= @genre.Da_percent %>%</td>
+            <td><%= @genre.Vi_percent %>%</td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <table class="table">
+        <thead>
+          <p class="text-center">最大特訓時のステータスとレッスンボーナスの初期値</p>
+          <tr>
+            <th></th>
+            <th>HP</th>
+            <th>Vo</th>
+            <th>Da</th>
+            <th>Vi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ステータス</td>
+            <td><%= @genre.super_HP %></td>
+            <td><%= @genre.super_Vo %></td>
+            <td><%= @genre.super_Da %></td>
+            <td><%= @genre.super_Vi %></td>
+          </tr>
+          <tr>
+            <td>レッスンボーナス</td>
+            <td>ー</td>
+            <td><%= @genre.super_Vo_percent %>%</td>
+            <td><%= @genre.super_Da_percent %>%</td>
+            <td><%= @genre.super_Vi_percent %>%</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <%= link_to 'アイドルの編集', edit_admin_genre_path(@genre), class: 'btn btn-primary' %> |
+      <%= link_to 'アイドル一覧へ', admin_genres_path, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>

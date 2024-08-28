@@ -1,58 +1,96 @@
 <header>
-  <nav class="navbar navbar-expand-md navbar-light" style="padding-top: 16px; margin: 0px;">
-    <div class="header container-fluid">
-      <div class="collapse navbar-collapse justify-content-around">
-        <ul class="navbar-nav">
+  <nav class="navbar navbar-expand-md navbar-light shadow-sm">
+    <div class="container-fluid">
+      <!-- ロゴを左端に配置 -->
+      <a class="navbar-brand" href="<%= root_path %>">
+        <%= image_tag("IMG_3865-removebg-preview.png", alt: "サイトのロゴ", style: "height: 100px; width: auto;") %>
+      </a>
+
+      <!-- ハンバーガーメニューのボタン -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- ナビゲーションメニュー -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-md-0">
           <% if user_signed_in? %>
-            <li>
-              <div class="header-content"><%= link_to current_user.name, user_path(current_user.id) %></div>
+            <li class="nav-item">
+              <%= link_to "マイページ", user_path(current_user.id), class: "nav-link" %>
             </li>
-            <li>
-              <div class="header-content"><%= link_to "投稿一覧", posts_path %></div>
+            <li class="nav-item">
+              <%= link_to "新規投稿", new_post_path, class: "nav-link" %>
             </li>
-            <li>
-              <div class="header-content"><%= link_to "新規投稿", new_post_path %></div>
+            <li class="nav-item">
+              <%= link_to "投稿一覧", posts_path, class: "nav-link" %>
             </li>
-            <li>
-              <div class="header-content"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></div>
+            <li class="nav-item">
+              <%= link_to "アイドル一覧", genres_path, class: "nav-link" %>
             </li>
-            <li>
-              <div class="search_form">
-                <%= form_with url: searches_search_path, local: true, method: :get do |f| %>
-                  <%= f.text_field :word %>
-                  <%= f.select :range, options_for_select([['User'], ['Post']]) %>
-                  <%= f.select :search, options_for_select([["完全一致","perfect_match"], ["前方一致","forward_match"],  ["後方一致","backward_match"], ["部分一致","partial_match"]]) %>
-                  <%= f.submit "検索", class: "btn-sm btn-primary" %>
-                <% end %>
-              </div>
+            <li class="nav-item">
+              <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= form_with url: searches_search_path, local: true, method: :get, class: "d-flex" do |f| %>
+                <input type="text" name="word" class="form-control me-2" placeholder="検索">
+                <select name="range" class="form-select me-2">
+                  <option value="User">User</option>
+                  <option value="Post">Post</option>
+                </select>
+                <select name="search" class="form-select me-2">
+                  <option value="perfect_match">完全一致</option>
+                  <option value="forward_match">前方一致</option>
+                  <option value="backward_match">後方一致</option>
+                  <option value="partial_match">部分一致</option>
+                </select>
+                <%= f.submit "検索", class: "btn btn-primary" %>
+              <% end %>
             </li>
           <% elsif admin_signed_in? %>
-            <li>
-              <div class="header-content"><%= link_to "投稿一覧", posts_path %></div>
+            <li class="nav-item">
+              <%= link_to "投稿一覧", admin_posts_path, class: "nav-link" %>
             </li>
-            <li>
-              <div class="header-content"><%= link_to "ジャンル一覧", admin_genres_path %></div>
+            <li class="nav-item">
+              <%= link_to "アイドル一覧", admin_genres_path, class: "nav-link" %>
             </li>
-            <li>
-              <div class="header-content"><%= link_to "ユーザー一覧", admin_users_path %></div>
+            <li class="nav-item">
+              <%= link_to "ユーザー一覧", admin_users_path, class: "nav-link" %>
             </li>
-             <li>
-              <div class="header-content"><%= link_to "ログアウト", destroy_admin_session_path, method: :delete %></div>
-             </li>
+            <li class="nav-item">
+              <%= link_to "ログアウト", destroy_admin_session_path, method: :delete, class: "nav-link" %>
+            </li>
           <% else %>
-            <li>
-              <div class="header-content"><%= link_to "Topページ", root_path %></div>
+            <li class="nav-item">
+              <%= link_to "Topページ", root_path, class: "nav-link" %>
             </li>
-            <li>
-              <div class="header-content"><%= link_to "新規登録", new_user_registration_path %></div>
+            <li class="nav-item">
+              <%= link_to "新規登録", new_user_registration_path, class: "nav-link" %>
             </li>
-            <li>
-              <div class="header-content"><%= link_to "ログイン", new_user_session_path %></div>
+            <li class="nav-item">
+              <%= link_to "ログイン", new_user_session_path, class: "nav-link" %>
             </li>
-            
           <% end %>
         </ul>
-      </div>  
+      </div>
     </div>
   </nav>
 </header>
+
+<style>
+/* ナビゲーションバーの背景色をオレンジの半透明に設定 */
+.navbar {
+  background-color: rgba(255, 165, 0, 0.7) !important; /* オレンジの半透明背景 */
+}
+
+/* ナビゲーションリンクの文字色を白に設定 */
+.nav-link {
+  color: white !important; /* 文字色を白にする */
+  font-weight: bold; /* 文字を太くする */
+  font-size: 1.1rem; /* 文字サイズを調整する */
+}
+
+/* ナビゲーションリンクにホバーしたときの色を設定 (オプション) */
+.nav-link:hover {
+  color: rgba(255, 255, 255, 0.8) !important; /* ホバー時の文字色を少し透明な白にする */
+}
+</style>
