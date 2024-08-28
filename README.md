@@ -15,7 +15,10 @@
 - 攻略したい内容を絞り込んで攻略情報を調べる時
 - 自分の持っている攻略情報を投稿する時
 ## 設計書
-​後ほど作成予定
+​![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](/Teikoku-Idol-Legend_Gathering/app/assets/images/スクリーンショット 2024-08-28 204153.png)
+ ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](/Teikoku-Idol-Legend_Gathering/app/assets/images/スクリーンショット 2024-08-28 205852.png)
+ ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](/Teikoku-Idol-Legend_Gathering/app/assets/images/スクリーンショット 2024-08-28 210003.png)
+- This site was built using[アプリケーション詳細設計書](https://docs.google.com/spreadsheets/d/1s6hBdbMJwd4LYhYi8t6GZpihsVFP9Gv0v0ISx79IIj4/edit?usp=sharing)
 ## 開発環境
 - OS：Linux(CentOS)
 - 言語：HTML,CSS,JavaScript,Ruby,SQL
