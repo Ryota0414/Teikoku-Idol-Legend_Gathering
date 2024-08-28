@@ -1,0 +1,20 @@
+<div class="container">
+  <h1>アイドル一覧</h1>
+
+  <div class="mb-3">
+    <div class="row">
+      <% @genres.each do |genre| %>
+        <div class="col-md-2 text-center mb-3">
+          <%= link_to genre_path(genre) do %>
+            <% if genre.genre_image.attached? %>
+              <%= image_tag genre.genre_image.variant(resize_to_limit: [100, 100]), class: "img-thumbnail mb-2" %>
+            <% else %>
+              <p>No Image Available</p>
+            <% end %>
+          <% end %>
+          <h5><%= link_to genre.name, genre_path(genre), class: 'd-block text-decoration-none' %></h5>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

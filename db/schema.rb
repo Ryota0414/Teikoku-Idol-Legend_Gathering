@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_24_074824) do
+ActiveRecord::Schema.define(version: 2024_08_27_063057) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -56,6 +56,20 @@ ActiveRecord::Schema.define(version: 2024_08_24_074824) do
   create_table "genres", force: :cascade do |t|
     t.string "name"
     t.text "body"
+    t.integer "HP"
+    t.integer "Vo"
+    t.integer "Da"
+    t.integer "Vi"
+    t.integer "Vo_percent"
+    t.integer "Da_percent"
+    t.integer "Vi_percent"
+    t.integer "super_HP"
+    t.integer "super_Vo"
+    t.integer "super_Da"
+    t.integer "super_Vi"
+    t.integer "super_Vo_percent"
+    t.integer "super_Da_percent"
+    t.integer "super_Vi_percent"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -105,6 +119,8 @@ ActiveRecord::Schema.define(version: 2024_08_24_074824) do
     t.boolean "is_deleted", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "bio"
+    t.boolean "admin"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

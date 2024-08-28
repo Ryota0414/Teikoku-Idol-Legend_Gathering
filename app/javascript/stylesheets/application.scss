@@ -1,1 +1,12 @@
 @use '~bootstrap/scss/bootstrap';
+
+.slick-prev:before, .slick-next:before {
+    color: gray;
+}
+.rounded-circle {
+  width: 60px;
+  height: 60px;
+  object-fit: cover; /* 画像をコンテナに合わせてトリミング */
+  border-radius: 50%; /* 完全な円形にする */
+  border: 2px solid #e1e8ed; /* 周囲に枠線を追加 */
+}
