@@ -4,6 +4,8 @@ class Post < ApplicationRecord
     has_many :post_comments, dependent: :destroy
     has_many :post_genres
     has_many :genres, through: :post_genres
+    has_many :likes, dependent: :destroy
+    has_many :liked_users, through: :likes, source: :user
     has_many_attached :images
     validates :title, presence: true
     validates :body, presence: true
